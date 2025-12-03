@@ -14,7 +14,7 @@ type TextVariant = "xl" | "l" | "m" | "s" | "xs";
 interface AppDividerProps {
   orientation?: DividerOrientation;
   thickness?: number;
-  color?: string;
+  color?: keyof ReturnType<typeof useTheme>;
   variant?: DividerVariant;
   text?: string;
   textVariant?: TextVariant;
@@ -41,7 +41,7 @@ export default function AppDivider({
   const { spacing } = AppTheme;
 
   const resolvedMargin = margin ? spacing[margin] : 0;
-  const dividerColor = color ?? theme.divider;
+  const dividerColor = getBackgroundColor(theme, color!) ?? theme.divider;
 
   const baseStyle: ViewStyle = {
     backgroundColor: dividerColor,
@@ -116,4 +116,21 @@ export default function AppDivider({
       ]}
     />
   );
+}
+
+function getBackgroundColor(
+  theme: ReturnType<typeof useTheme>,
+  key: string
+): string {
+  const value = (theme as any)[key];
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (typeof value === "object" && value.DEFAULT) {
+    return value.DEFAULT;
+  }
+
+  return theme.border;
 }

@@ -1,4 +1,3 @@
-import AppTheme from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import React from "react";
 import { Image, ImageSourcePropType, View, ViewStyle } from "react-native";
@@ -105,10 +104,10 @@ export default function AppAvatar({
 }
 
 interface AppAvatarGroupProps {
-  avatars: Array<{
+  avatars: {
     source?: ImageSourcePropType;
     name?: string;
-  }>;
+  }[];
   max?: number;
   size?: AvatarSize | number;
   overlap?: number;
@@ -125,8 +124,6 @@ export function AppAvatarGroup({
   const theme = useTheme();
   const displayAvatars = avatars.slice(0, max);
   const remaining = Math.max(0, avatars.length - max);
-
-  const avatarSize = typeof size === "number" ? size : sizeMap[size];
 
   return (
     <View style={[{ flexDirection: "row", alignItems: "center" }, style]}>
