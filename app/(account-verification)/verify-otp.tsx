@@ -11,7 +11,7 @@ export default function Page() {
   const theme = useTheme();
 
   const handleNext = () => {
-    router.push("/(registration)/contact-information");
+    router.replace("/(registration)");
   };
 
   return (
@@ -22,13 +22,17 @@ export default function Page() {
       keyboardAware
     >
       <AppView align="center" gap="sm">
-        <AppText heading="s">What is your name?</AppText>
+        <AppText heading="s">Enter verification code</AppText>
         <AppText text="m" align="center" style={{ maxWidth: 280 }}>
-          Please enter your legal name
+          Please enter the code from the SMS
         </AppText>
       </AppView>
       <AppView flex paddingVertical="huge"></AppView>
       <AppView align="center" gap="xl">
+        <AppText text="s" align="center" style={{ maxWidth: 240 }}>
+          Didn&apos;t receive an SMS? Resend SMS
+        </AppText>
+
         <AppButton
           fullWidth
           rightIcon={<AppIcon name="ArrowRight" color={theme.text.primary} />}

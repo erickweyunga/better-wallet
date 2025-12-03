@@ -11,7 +11,7 @@ export default function Page() {
   const theme = useTheme();
 
   const handleNext = () => {
-    router.push("/(registration)/contact-information");
+    router.push("/(registration)");
   };
 
   return (
@@ -22,9 +22,8 @@ export default function Page() {
       keyboardAware
     >
       <AppView align="center" gap="sm">
-        <AppText heading="s">What is your name?</AppText>
-        <AppText text="m" align="center" style={{ maxWidth: 280 }}>
-          Please enter your legal name
+        <AppText heading="s" align="center">
+          Enter your contact information
         </AppText>
       </AppView>
       <AppView flex paddingVertical="huge"></AppView>

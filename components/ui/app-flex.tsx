@@ -1,4 +1,5 @@
 import AppTheme from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
 import React from "react";
 import { View, ViewProps, ViewStyle } from "react-native";
 import AppDivider from "./app-divider";
@@ -23,7 +24,7 @@ interface AppFlexProps extends ViewProps {
   wrap?: Wrap;
   flex?: boolean | number;
   divider?: boolean;
-  dividerColor?: string;
+  dividerColor?: keyof ReturnType<typeof useTheme>;
   style?: ViewStyle;
   children: React.ReactNode;
 }

@@ -1,4 +1,6 @@
 import {
+  ArrowLeft,
+  ArrowRight,
   Bell,
   CheckMark,
   ChevronBackward,
@@ -44,6 +46,8 @@ export const iconRegistry = {
   Lock: { icon: Lock },
   HomeFill: { icon: HomeFill },
   Home: { icon: Home },
+  ArrowRight: { icon: ArrowRight },
+  ArrowLeft: { icon: ArrowLeft },
 } as const satisfies Record<string, IconSet>;
 
 //------------------------ Types ------------------------//

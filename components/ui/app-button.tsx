@@ -44,7 +44,7 @@ export default function AppButton({
   rightIcon,
   padding,
   paddingHorizontal = "xl",
-  paddingVertical = "lg",
+  paddingVertical = "md",
   radius = "full",
   fullWidth = false,
   style,

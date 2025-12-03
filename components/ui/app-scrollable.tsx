@@ -2,13 +2,13 @@ import AppTheme from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import React from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
   RefreshControlProps,
   ScrollView,
   ScrollViewProps,
   ViewStyle,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type SpacingKey = keyof typeof AppTheme.spacing;
 
@@ -23,8 +23,10 @@ interface AppScrollableProps extends Omit<ScrollViewProps, "refreshControl"> {
   refreshControl?: React.ReactElement<RefreshControlProps>;
   stickyHeaderIndices?: number[];
   showsVerticalScrollIndicator?: boolean;
-  keyboardAvoiding?: boolean;
-  safe?: boolean;
+  keyboardAware?: boolean;
+  bottomOffset?: number;
+  safeTop?: boolean;
+  safeBottom?: boolean;
 }
 
 export default function AppScrollable({
@@ -38,13 +40,16 @@ export default function AppScrollable({
   refreshControl,
   stickyHeaderIndices,
   showsVerticalScrollIndicator = false,
-  keyboardAvoiding = false,
-  safe = false,
+  keyboardAware = false,
+  bottomOffset = 0,
+  safeTop = false,
+  safeBottom = false,
   style,
   contentContainerStyle,
   ...rest
 }: AppScrollableProps) {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
   const { spacing } = AppTheme;
 
   const contentPaddingStyle: ViewStyle = {
@@ -53,44 +58,43 @@ export default function AppScrollable({
     ...(paddingVertical && { paddingVertical: spacing[paddingVertical] }),
     ...(paddingTop && { paddingTop: spacing[paddingTop] }),
     ...(paddingBottom && { paddingBottom: spacing[paddingBottom] }),
+    ...(safeTop && {
+      paddingTop: (spacing[paddingTop as SpacingKey] || 0) + insets.top,
+    }),
+    ...(safeBottom && {
+      paddingBottom:
+        (spacing[paddingBottom as SpacingKey] || 0) + insets.bottom,
+    }),
   };
 
   const backgroundColor = background
     ? getBackgroundColor(theme, background)
     : undefined;
 
-  const scrollContent = (
-    <ScrollView
-      showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-      stickyHeaderIndices={stickyHeaderIndices}
-      refreshControl={refreshControl}
-      keyboardShouldPersistTaps="handled"
-      {...rest}
-      style={[{ flex: 1 }, backgroundColor && { backgroundColor }, style]}
-      contentContainerStyle={[contentPaddingStyle, contentContainerStyle]}
-    >
-      {children}
-    </ScrollView>
-  );
+  const commonProps = {
+    showsVerticalScrollIndicator,
+    stickyHeaderIndices,
+    refreshControl,
+    keyboardShouldPersistTaps: "handled" as const,
+    style: [{ flex: 1 }, backgroundColor && { backgroundColor }, style],
+    contentContainerStyle: [contentPaddingStyle, contentContainerStyle],
+    ...rest,
+  };
 
-  if (keyboardAvoiding) {
+  if (keyboardAware) {
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
-      >
-        {scrollContent}
-      </KeyboardAvoidingView>
+      <KeyboardAwareScrollView bottomOffset={bottomOffset} {...commonProps}>
+        {children}
+      </KeyboardAwareScrollView>
     );
   }
 
-  return scrollContent;
+  return <ScrollView {...commonProps}>{children}</ScrollView>;
 }
 
 function getBackgroundColor(
   theme: ReturnType<typeof useTheme>,
-  key: string
+  key: string,
 ): string {
   const value = (theme as any)[key];
 

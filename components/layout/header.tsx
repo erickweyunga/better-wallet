@@ -33,7 +33,7 @@ export default function Header({
           style={{ height: 44, width: 44 }}
           padding="sm"
         >
-          <AppIcon name="ChevronBackward" />
+          <AppIcon name="ArrowLeft" />
         </AppButton>
       );
     }
