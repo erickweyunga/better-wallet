@@ -53,7 +53,7 @@ const expoIconPacks = {
 } as const;
 
 export default function AppIcon({
-  size = 24,
+  size = 17,
   color,
   style,
   ...props

@@ -61,7 +61,7 @@ export default function AppButton({
     borderRadius: radiusValues[radius],
     justifyContent: "center",
     alignItems: "center",
-    minHeight: 56,
+    minHeight: 44,
     flexDirection: "row",
     ...(fullWidth && { width: "100%" }),
     ...(padding && { padding: spacing[padding] }),
@@ -132,7 +132,7 @@ export default function AppButton({
 
 function getBackgroundColor(
   theme: ReturnType<typeof useTheme>,
-  key: string,
+  key: string
 ): string {
   const value = (theme as any)[key];
 
@@ -150,15 +150,13 @@ function getBackgroundColor(
 function getDefaultTextColor(
   variant: ButtonVariant,
   theme: ReturnType<typeof useTheme>,
-  background: string,
+  background: string
 ): string {
   if (variant === "filled") {
-    // Use white for filled buttons
     return theme.neutral[0];
   }
 
   if (variant === "outlined" || variant === "ghost") {
-    // Use background color for outlined/ghost buttons
     return getBackgroundColor(theme, background);
   }
 

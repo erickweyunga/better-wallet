@@ -1,7 +1,7 @@
 import AppTheme from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 import { useHeaderHeight } from "@react-navigation/elements";
-import React from "react";
+import React, { useMemo } from "react";
 import { View, ViewProps, ViewStyle } from "react-native";
 import {
   SafeAreaView,
@@ -11,7 +11,7 @@ import {
 type SpacingKey = keyof typeof AppTheme.spacing;
 
 interface AppViewProps extends ViewProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   flex?: boolean;
   row?: boolean;
   center?: boolean;
@@ -78,34 +78,70 @@ export default function AppView({
   const insets = useSafeAreaInsets();
   const { spacing, radius: radiusValues } = AppTheme;
 
-  const viewStyle: ViewStyle = {
-    ...(flex && { flex: 1 }),
-    ...(row && { flexDirection: "row" }),
-    ...(center && { justifyContent: "center", alignItems: "center" }),
-    ...(justify && { justifyContent: justify }),
-    ...(align && { alignItems: align }),
-    ...(padding && { padding: spacing[padding] }),
-    ...(paddingHorizontal && { paddingHorizontal: spacing[paddingHorizontal] }),
-    ...(paddingVertical && { paddingVertical: spacing[paddingVertical] }),
-    ...(paddingTop && { paddingTop: spacing[paddingTop] }),
-    ...(paddingBottom && { paddingBottom: spacing[paddingBottom] }),
-    ...(paddingLeft && { paddingLeft: spacing[paddingLeft] }),
-    ...(paddingRight && { paddingRight: spacing[paddingRight] }),
-    ...(margin && { margin: spacing[margin] }),
-    ...(marginHorizontal && { marginHorizontal: spacing[marginHorizontal] }),
-    ...(marginVertical && { marginVertical: spacing[marginVertical] }),
-    ...(marginTop && { marginTop: spacing[marginTop] }),
-    ...(marginBottom && { marginBottom: spacing[marginBottom] }),
-    ...(marginLeft && { marginLeft: spacing[marginLeft] }),
-    ...(marginRight && { marginRight: spacing[marginRight] }),
-    ...(gap && { gap: spacing[gap] }),
-    ...(radius && { borderRadius: radiusValues[radius] }),
-    ...(background && {
-      backgroundColor: getBackgroundColor(theme, background),
+  const backgroundColor = useMemo(() => {
+    return background ? getBackgroundColor(theme, background) : undefined;
+  }, [theme, background]);
+
+  const viewStyle: ViewStyle = useMemo(
+    () => ({
+      ...(flex && { flex: 1 }),
+      ...(row && { flexDirection: "row" }),
+      ...(center && { justifyContent: "center", alignItems: "center" }),
+      ...(justify && { justifyContent: justify }),
+      ...(align && { alignItems: align }),
+      ...(padding && { padding: spacing[padding] }),
+      ...(paddingHorizontal && {
+        paddingHorizontal: spacing[paddingHorizontal],
+      }),
+      ...(paddingVertical && { paddingVertical: spacing[paddingVertical] }),
+      ...(paddingTop && { paddingTop: spacing[paddingTop] }),
+      ...(paddingBottom && { paddingBottom: spacing[paddingBottom] }),
+      ...(paddingLeft && { paddingLeft: spacing[paddingLeft] }),
+      ...(paddingRight && { paddingRight: spacing[paddingRight] }),
+      ...(margin && { margin: spacing[margin] }),
+      ...(marginHorizontal && { marginHorizontal: spacing[marginHorizontal] }),
+      ...(marginVertical && { marginVertical: spacing[marginVertical] }),
+      ...(marginTop && { marginTop: spacing[marginTop] }),
+      ...(marginBottom && { marginBottom: spacing[marginBottom] }),
+      ...(marginLeft && { marginLeft: spacing[marginLeft] }),
+      ...(marginRight && { marginRight: spacing[marginRight] }),
+      ...(gap && { gap: spacing[gap] }),
+      ...(radius && { borderRadius: radiusValues[radius] }),
+      ...(backgroundColor && { backgroundColor }),
+      ...(safeFromHeader && { paddingTop: headerHeight }),
+      ...(safe && safeFromHeader && { paddingBottom: insets.bottom }),
     }),
-    ...(safeFromHeader && { paddingTop: headerHeight }),
-    ...(safe && safeFromHeader && { paddingBottom: insets.bottom }),
-  };
+    [
+      flex,
+      row,
+      center,
+      justify,
+      align,
+      padding,
+      paddingHorizontal,
+      paddingVertical,
+      paddingTop,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      margin,
+      marginHorizontal,
+      marginVertical,
+      marginTop,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      gap,
+      radius,
+      backgroundColor,
+      headerHeight,
+      insets.bottom,
+      safe,
+      safeFromHeader,
+      spacing,
+      radiusValues,
+    ],
+  );
 
   const Container = safe && !safeFromHeader ? SafeAreaView : View;
 
@@ -118,7 +154,7 @@ export default function AppView({
 
 function getBackgroundColor(
   theme: ReturnType<typeof useTheme>,
-  key: string
+  key: string,
 ): string {
   const value = (theme as any)[key];
 

@@ -34,7 +34,7 @@ export default function AppScrollable({
   paddingVertical,
   paddingTop,
   paddingBottom,
-  background,
+  background = "background",
   refreshControl,
   stickyHeaderIndices,
   showsVerticalScrollIndicator = false,
@@ -90,7 +90,7 @@ export default function AppScrollable({
 
 function getBackgroundColor(
   theme: ReturnType<typeof useTheme>,
-  key: string,
+  key: string
 ): string {
   const value = (theme as any)[key];
 
